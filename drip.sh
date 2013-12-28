@@ -5,19 +5,26 @@ finally() {
     echo "return code: $RET"
     if [ $RET -ne 0 ]; then
         # chatch block
-        echo "stop"
-
+        echo "error occured"
     else
-        echo "no error (OK!)"
+        echo "finished with no error"
     fi
     # try block
-    echo "sass_id"
-    echo $sass_id
     kill -9 $coffee_id
     kill -9 $sass_id
     echo "good bye"
 
     exit $RET
+}
+
+setup_coffee(){
+    coffee -w -o js/ -c coffee/*.coffee &
+    coffee_id=$!
+}
+
+setup_sass(){
+    sass --watch sass:css &
+    sass_id=$!
 }
 
 compile_haml(){
@@ -33,34 +40,42 @@ trap finally EXIT
 
 # try block
 
+
+setup_coffee
+setup_sass
+
 HAML_SRC=haml
-
-coffee -w -o js/ -c coffee/*.coffee &
-coffee_id=$!
-
-sass --watch sass:css &
-sass_id=$!
-
 INTERVAL=1 #監視間隔, 秒で指定
-last=`get_time_stamp haml/index.haml`
-
+last="0"
+# 最初に全てコンパイル
 files=${HAML_SRC}/*
 for file in ${files}
 do
-    echo $last
+    compile_haml $file
+    time_stamp=`get_time_stamp $file`
+    if test $last -lt $time_stamp ; then
+        last=$time_stamp
+    fi
 done
 
 while true; do
     sleep $INTERVAL
     files=${HAML_SRC}/*
+    current_last="0"
     for file in ${files}
     do
-        echo $last
+        time_stamp=`get_time_stamp $file`
+        if test $last -lt $time_stamp ; then
+            echo "updated: $file"
+            compile_haml $file
+            last=$time_stamp
+            if test $current_last -lt $time_stamp ; then
+                current_last=$time_stamp
+            fi
+        fi
     done
-    current=`get_time_stamp haml/index.haml`
-    if [ $last -lt $current ] ; then
-        echo "updated: $current"
-        last=$current
-        compile_haml "haml/index.haml"
+
+    if test $last -lt $current_last ; then
+        last=$current_last
     fi
 done
