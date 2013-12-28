@@ -3,6 +3,7 @@
 HAML_DIR=haml
 SASS_DIR=sass
 COFFEE_DIR=coffee
+HTML_DIR="."
 JS_DIR=js
 CSS_DIR=css
 
@@ -12,6 +13,9 @@ if test $1 = init; then
     mkdir $HAML_DIR
     mkdir $JS_DIR
     mkdir $CSS_DIR
+    if test $HTML_DIR != "."; then
+        mkdir $HTML_DIR
+    fi
     exit 0
 fi
 
@@ -45,7 +49,7 @@ setup_sass(){
 }
 
 compile_haml(){
-    haml $1 `echo $1 | sed -e s%$HAML_DIR/%% | sed -e s/.haml/.html/`
+    haml $1 $HTML_DIR/`echo $1 | sed -e s%$HAML_DIR/%% | sed -e s/.haml/.html/`
 }
 
 get_time_stamp(){
