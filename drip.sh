@@ -20,10 +20,20 @@ finally() {
     exit $RET
 }
 
+compile_haml(){
+    haml $1 `echo $1 | sed -e s%$HAML_SRC/%% | sed -e s/.haml/.html/`
+}
+
+get_time_stamp(){
+    echo `ls -l -T $1 | awk '{print $6$7$8}' | sed -e s/://g`
+}
+
 set -e
 trap finally EXIT
 
 # try block
+
+HAML_SRC=haml
 
 coffee -w -o js/ -c coffee/*.coffee &
 coffee_id=$!
@@ -31,16 +41,26 @@ coffee_id=$!
 sass --watch sass:css &
 sass_id=$!
 
-echo "監視対象 haml/index.haml"
-echo "実行コマンド  haml haml/index.haml"
 INTERVAL=1 #監視間隔, 秒で指定
-last=`ls -l -T haml/index.haml | awk '{print $6"-"$7"-"$8}'`
+last=`get_time_stamp haml/index.haml`
+
+files=${HAML_SRC}/*
+for file in ${files}
+do
+    echo $last
+done
+
 while true; do
     sleep $INTERVAL
-    current=`ls -l -T haml/index.haml | awk '{print $6"-"$7"-"$8}'`
-    if [ $last != $current ] ; then
+    files=${HAML_SRC}/*
+    for file in ${files}
+    do
+        echo $last
+    done
+    current=`get_time_stamp haml/index.haml`
+    if [ $last -lt $current ] ; then
         echo "updated: $current"
         last=$current
-        eval haml haml/index.haml index.html
+        compile_haml "haml/index.haml"
     fi
 done
