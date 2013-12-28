@@ -1,13 +1,17 @@
 #!/bin/sh
 
-HAML_SRC=haml
+HAML_DIR=haml
+SASS_DIR=sass
+COFFEE_DIR=coffee
+JS_DIR=js
+CSS_DIR=css
 
 if test $1 = init; then
-    mkdir sass
-    mkdir coffee
-    mkdir $HAML_SRC
-    mkdir js
-    mkdir css
+    mkdir $SASS_DIR
+    mkdir $COFFEE_DIR
+    mkdir $HAML_DIR
+    mkdir $JS_DIR
+    mkdir $CSS_DIR
     exit 0
 fi
 
@@ -31,17 +35,17 @@ finally() {
 }
 
 setup_coffee(){
-    coffee -w -o js/ -c coffee/*.coffee &
+    coffee -w -o $JS_DIR/ -c $COFFEE_DIR/*.coffee &
     coffee_id=$!
 }
 
 setup_sass(){
-    sass --watch sass:css &
+    sass --watch $SASS_DIR:$CSS_DIR &
     sass_id=$!
 }
 
 compile_haml(){
-    haml $1 `echo $1 | sed -e s%$HAML_SRC/%% | sed -e s/.haml/.html/`
+    haml $1 `echo $1 | sed -e s%$HAML_DIR/%% | sed -e s/.haml/.html/`
 }
 
 get_time_stamp(){
@@ -60,7 +64,7 @@ setup_sass
 INTERVAL=1 #監視間隔, 秒で指定
 last="0"
 # 最初に全てコンパイル
-files=${HAML_SRC}/*
+files=${HAML_DIR}/*
 for file in ${files}
 do
     compile_haml $file
@@ -72,7 +76,7 @@ done
 
 while true; do
     sleep $INTERVAL
-    files=${HAML_SRC}/*
+    files=${HAML_DIR}/*
     current_last="0"
     for file in ${files}
     do
