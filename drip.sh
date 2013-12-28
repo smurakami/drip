@@ -3,7 +3,7 @@
 HAML_DIR=haml
 SASS_DIR=sass
 COFFEE_DIR=coffee
-HTML_DIR="."
+HTML_DIR="html"
 JS_DIR=js
 CSS_DIR=css
 

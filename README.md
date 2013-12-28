@@ -41,7 +41,7 @@ CSS_DIR=css
 
 ## 注意
 
-現在hamlディレクトリが空だとエラーが出るバグがあります。
+現在hamlディレクトリとcoffeeディレクトリが空だとエラーが出るバグがあります。
 
 ```sh
 touch haml/index.haml
