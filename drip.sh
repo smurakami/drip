@@ -1,5 +1,18 @@
 #!/bin/sh
 
+HAML_SRC=haml
+
+if test $1 = init; then
+    mkdir sass
+    mkdir coffee
+    mkdir $HAML_SRC
+    mkdir js
+    mkdir css
+    exit 0
+fi
+
+echo $1
+
 finally() {
     RET=$?
     echo "return code: $RET"
@@ -44,7 +57,6 @@ trap finally EXIT
 setup_coffee
 setup_sass
 
-HAML_SRC=haml
 INTERVAL=1 #監視間隔, 秒で指定
 last="0"
 # 最初に全てコンパイル
