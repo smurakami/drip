@@ -6,6 +6,8 @@ Haml, Sass(Scss), CoffeeScriptを監視して自動でコンパイルするシ�
 
 主な動機は、Guardのhamlがうまく動かなかったことです。卒業研究にhamlを使う必要があったために、とりあえずの代替案として本ツールを作成しました。
 
+あと、GuardのCoffeeのコンパイルエラーが、行数表示無しで読みにくかったことも動機の一つです。
+
 #How To Use
 
 haml, sass, coffeeコマンドが使用可能であることが前提です。
@@ -20,7 +22,7 @@ chmod u+x drip.sh
 ./drip.sh init
 ```
 を実行することで、必要なディレクトリ構成を作成する事が出来ます。
-このディレクトリ構成は
+このディレクトリ構成は、drip.shの
 
 ```drip.sh
 HAML_DIR=haml
