@@ -3,7 +3,7 @@
 HAML_DIR=haml
 SASS_DIR=sass
 COFFEE_DIR=coffee
-HTML_DIR="html"
+HTML_DIR="."
 JS_DIR=js
 CSS_DIR=css
 
@@ -49,7 +49,11 @@ setup_sass(){
 }
 
 compile_haml(){
-    haml $1 $HTML_DIR/`echo $1 | sed -e s%$HAML_DIR/%% | sed -e s/.haml/.html/`
+    {
+        haml $1 $HTML_DIR/`echo $1 | sed -e s%$HAML_DIR/%% | sed -e s/.haml/.html/`
+    } || {
+        echo "haml: error!"
+    }
 }
 
 get_time_stamp(){
