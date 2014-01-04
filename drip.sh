@@ -7,7 +7,7 @@ HTML_DIR="."
 JS_DIR=js
 CSS_DIR=css
 
-if test $1 = init; then
+if test "$1" = init; then
     mkdir $SASS_DIR
     mkdir $COFFEE_DIR
     mkdir $HAML_DIR
@@ -50,14 +50,14 @@ setup_sass(){
 
 compile_haml(){
     {
-        haml $1 $HTML_DIR/`echo $1 | sed -e s%$HAML_DIR/%% | sed -e s/.haml/.html/`
+        haml $1 ${HTML_DIR}/`echo $1 | sed -e s%$HAML_DIR/%% | sed -e s/.haml/.html/`
     } || {
         echo "haml: error!"
     }
 }
 
 get_time_stamp(){
-    echo `ls -l -T $1 | awk '{print $6$7$8}' | sed -e s/://g`
+    echo `ls -l -T $1 | sed -e s/://g | awk '{printf "%04d%02d%02d%02d", $9, $6, $7, $8}'`
 }
 
 set -e
