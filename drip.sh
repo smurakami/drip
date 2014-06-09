@@ -7,14 +7,24 @@ HTML_DIR="."
 JS_DIR=js
 CSS_DIR=css
 
+BOOTSTRAP_DIR=`dirname $0`/../bootstrap
+
 if test "$1" = init; then
     mkdir $SASS_DIR
     mkdir $COFFEE_DIR
     mkdir $HAML_DIR
+    touch $HAML_DIR/index.haml
     mkdir $JS_DIR
     mkdir $CSS_DIR
     if test $HTML_DIR != "."; then
         mkdir $HTML_DIR
+    fi
+    if test "$2" = bootstrap; then
+      mkdir fonts
+      cp $BOOTSTRAP_DIR/fonts/* fonts
+      cp $BOOTSTRAP_DIR/*.css $CSS_DIR
+      cp $BOOTSTRAP_DIR/*.js $JS_DIR
+      cp $BOOTSTRAP_DIR/index.haml $HAML_DIR
     fi
     exit 0
 fi
